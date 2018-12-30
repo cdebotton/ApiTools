@@ -26,9 +26,14 @@ impl Schema {
     let mut paths: Vec<Endpoint> = vec![];
     if let Value::Object(entity) = &json["paths"] {
       for (uri, value) in entity {
+        let get = match &value["get"] {
+          Value::Object(get) => read_get(get),
+          _ => None,
+        };
+
         let endpoint = Endpoint {
           uri: uri.to_owned(),
-          get: read_get(&value["get"]),
+          get,
         };
         paths.push(endpoint);
       }
@@ -55,16 +60,11 @@ fn read_params(value: &JsonMap) -> Option<Vec<Param>> {
   }
 }
 
-fn read_get(value: &Value) -> Option<Get> {
-  match value {
-    Value::Object(get) => {
-      let params = read_params(get);
+fn read_get(value: &JsonMap) -> Option<Get> {
+  let params = read_params(value);
 
-      Some(Get {
-        params,
-        responses: (),
-      })
-    }
-    _ => None,
-  }
+  Some(Get {
+    params,
+    responses: (),
+  })
 }
