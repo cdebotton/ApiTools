@@ -1,7 +1,5 @@
+use super::params::{Param, ParamLocation};
 use serde_json::Value;
-
-#[derive(Debug)]
-pub struct Param {}
 
 #[derive(Debug)]
 pub struct Get {
@@ -26,8 +24,8 @@ impl Schema {
     let mut paths: Vec<Endpoint> = vec![];
     if let Value::Object(entity) = &json["paths"] {
       for (uri, value) in entity {
-        let get = match &value["get"] {
-          Value::Object(get) => read_get(get),
+        let get = match &value.get("get") {
+          Some(Value::Object(get)) => read_get(get),
           _ => None,
         };
 
@@ -48,11 +46,28 @@ impl Schema {
 type JsonMap = serde_json::Map<String, Value>;
 
 fn read_params(value: &JsonMap) -> Option<Vec<Param>> {
-  match &value["parameters"] {
-    Value::Array(params) => params
+  match &value.get("parameters") {
+    Some(Value::Array(params)) => params
       .into_iter()
       .map(|item| {
-        let param = Param {};
+        let nullable = if let Value::Bool(required) = item.get("required").unwrap() {
+          *required != true
+        } else {
+          true
+        };
+
+        let location = match item.get("in").unwrap() {
+          Value::String(string) if string == "path" => ParamLocation::Uri,
+          Value::String(string) if string == "query" => ParamLocation::QueryString,
+          _ => panic!("Invalid path location"),
+        };
+
+        let param = Param {
+          name: item.get("name").unwrap().to_string(),
+          description: item.get("description").unwrap().to_string(),
+          nullable,
+          location,
+        };
         Some(param)
       })
       .collect(),
