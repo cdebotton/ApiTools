@@ -21,8 +21,8 @@ pub struct Schema {
 
 impl Schema {
   pub fn new(json: Value) -> Schema {
-    let entity = &json.get("paths").unwrap().as_object().unwrap();
-    let paths: Vec<Endpoint> = entity.into_iter().fold(vec![], |mut acc, (uri, value)| {
+    let paths = &json.get("paths").unwrap().as_object().unwrap();
+    let paths: Vec<Endpoint> = paths.into_iter().fold(vec![], |mut acc, (uri, value)| {
       let get = match &value.get("get") {
         Some(Value::Object(get)) => read_get(get),
         _ => None,
