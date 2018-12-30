@@ -28,6 +28,15 @@ pub enum Params {
   Empty,
 }
 
+impl Typescript for Params {
+  fn to_typescript(&self) -> String {
+    match self {
+      Params::Contents(contents) => contents.iter().map(|param| param.to_typescript()).collect(),
+      Params::Empty => "".to_string(),
+    }
+  }
+}
+
 type JsonMap = serde_json::Map<String, Value>;
 
 impl Params {
