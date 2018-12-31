@@ -21,6 +21,8 @@ mod endpoint;
 mod config;
 
 use crate::config::{Config, Source as ConfigSource, Generator};
+use crate::dialect::typescript::TypescriptDialect;
+use crate::dialect::graphql::GraphQLDialect;
 
 pub fn main() {
     let config = Config::read_env();
@@ -36,10 +38,10 @@ pub fn main() {
         for generator in config.generators {
             match generator {
                 Generator::Typescript => {
-                    println!("{}", &schema);
+                    println!("{}", &schema.to_typescript());
                 },
                 Generator::GraphQL => {
-                    println!("{}", &schema);
+                    println!("{}", &schema.to_graphql());
                 },
                 _ => panic!("Unsupported output")
             }

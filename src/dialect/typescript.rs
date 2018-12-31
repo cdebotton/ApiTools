@@ -1,23 +1,12 @@
-use crate::params::{Param, Params};
-use crate::response::Response;
 use crate::schema::Schema;
-use crate::types::Types;
-use std::fmt;
 
-pub trait TypeScriptDialect {}
+pub trait TypescriptDialect {
+  fn to_typescript(&self) -> &'static str;
+}
 
-impl TypeScriptDialect for Schema {}
-impl TypeScriptDialect for Param {}
-impl TypeScriptDialect for Params {}
-impl TypeScriptDialect for Response {}
-impl TypeScriptDialect for Types {}
-
-impl fmt::Display for Schema
-where
-  Self: TypeScriptDialect,
-{
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "Typescript!")
+impl TypescriptDialect for Schema {
+  fn to_typescript(&self) -> &'static str {
+    "Typescript!"
   }
 }
 

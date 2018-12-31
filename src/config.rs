@@ -1,6 +1,5 @@
 use clap::{App, Arg};
 use crate::api;
-use std::env;
 
 pub enum Generator {
   Typescript,
@@ -56,7 +55,7 @@ impl Config {
         let generator = match generator_string {
           "typescript" => Generator::Typescript,
           "reasonml" => Generator::ReasonML,
-          "graphql" => Generator::ReasonML,
+          "graphql" => Generator::GraphQL,
           _ => panic!("Unkown generator: {}", generator_string),
         };
 
