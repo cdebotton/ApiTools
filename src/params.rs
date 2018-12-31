@@ -1,5 +1,5 @@
 use crate::dialect::typescript::Typescript;
-use crate::types;
+use crate::types::Types;
 use serde_json::Value;
 
 #[derive(Debug)]
@@ -14,7 +14,7 @@ pub struct Param {
   pub name: String,
   pub nullable: bool,
   pub location: ParamLocation,
-  pub type_value: types::Types,
+  pub type_value: Types,
 }
 
 impl Typescript for Param {
@@ -60,7 +60,7 @@ impl Params {
               _ => panic!("Invalid path location"),
             };
 
-            let type_value = types::from_schema(item.get("schema").unwrap());
+            let type_value = Types::from_schema(item.get("schema").unwrap());
 
             Param {
               name: item.get("name").unwrap().to_string(),

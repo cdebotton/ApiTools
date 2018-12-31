@@ -11,15 +11,17 @@ pub enum Types {
   Object,
 }
 
-pub fn from_schema(schema: &JsonValue) -> Types {
-  let type_name = schema.get("type");
-  let ref_name = schema.get("$ref");
+impl Types {
+  pub fn from_schema(schema: &JsonValue) -> Self {
+    let type_name = schema.get("type");
+    let ref_name = schema.get("$ref");
 
-  match (type_name, ref_name) {
-    (Some(JsonValue::String(name)), _) if name == "string" => Types::String,
-    (Some(JsonValue::String(name)), _) if name == "number" => Types::Number,
-    (Some(JsonValue::String(name)), _) if name == "boolean" => Types::Boolean,
-    (Some(JsonValue::String(name)), _) if name == "null" => Types::Null,
-    _ => Types::Null,
+    match (type_name, ref_name) {
+      (Some(JsonValue::String(name)), _) if name == "string" => Types::String,
+      (Some(JsonValue::String(name)), _) if name == "number" => Types::Number,
+      (Some(JsonValue::String(name)), _) if name == "boolean" => Types::Boolean,
+      (Some(JsonValue::String(name)), _) if name == "null" => Types::Null,
+      _ => Types::Null,
+    }
   }
 }
