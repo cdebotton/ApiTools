@@ -1,4 +1,5 @@
-use super::dialect::typescript::Typescript;
+use crate::dialect::typescript::Typescript;
+use crate::types;
 use serde_json::Value;
 
 #[derive(Debug)]
@@ -13,6 +14,7 @@ pub struct Param {
   pub name: String,
   pub nullable: bool,
   pub location: ParamLocation,
+  pub type_value: types::Types,
 }
 
 impl Typescript for Param {
@@ -58,11 +60,14 @@ impl Params {
               _ => panic!("Invalid path location"),
             };
 
+            let type_value = types::from_schema(item.get("schema").unwrap());
+
             Param {
               name: item.get("name").unwrap().to_string(),
               description: item.get("description").unwrap().to_string(),
               nullable,
               location,
+              type_value,
             }
           })
           .collect();

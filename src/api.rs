@@ -1,4 +1,4 @@
-use super::schema::Schema;
+use crate::schema::Schema;
 use hyper::{Body, Client, Request, Uri};
 use hyper_tls::HttpsConnector;
 use tokio::prelude::*;

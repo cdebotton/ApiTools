@@ -1,4 +1,4 @@
-use super::params::Params;
+use crate::params::Params;
 use serde_json::Value;
 
 #[derive(Debug)]
