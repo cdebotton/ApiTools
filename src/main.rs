@@ -16,6 +16,7 @@ mod params;
 mod dialect;
 mod types;
 mod response;
+mod endpoint;
 
 pub fn main() {
     tokio::run_async(async move {
