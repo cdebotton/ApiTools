@@ -6,6 +6,7 @@ extern crate hyper;
 extern crate hyper_tls;
 extern crate serde_json;
 extern crate base64;
+extern crate clap;
 
 #[macro_use]
 extern crate dotenv_codegen;
@@ -17,17 +18,31 @@ mod dialect;
 mod types;
 mod response;
 mod endpoint;
+mod config;
+
+use crate::config::{Config, Source as ConfigSource, Generator};
 
 pub fn main() {
+    let config = Config::read_env();
+
     tokio::run_async(async move {
-        let url = dotenv!("API_URL").to_string();
-        let token = api::Token {
-            id: dotenv!("API_ID").to_string(),
-            secret: dotenv!("API_SECRET").to_string(),
+        let schema = match config.source {
+            ConfigSource::Http(config) => {
+                await!(api::fetch_schema(config.url, config.token.unwrap()))
+            },
+            _ => panic!("Unsupported source type"),
         };
 
-        let schema = await!(api::fetch_schema(url, token));
-
-        println!("{:?}", schema.paths);
+        for generator in config.generators {
+            match generator {
+                Generator::Typescript => {
+                    println!("{}", &schema);
+                },
+                Generator::GraphQL => {
+                    println!("{}", &schema);
+                },
+                _ => panic!("Unsupported output")
+            }
+        }
     });
 }

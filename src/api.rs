@@ -8,7 +8,7 @@ pub struct Token {
   pub secret: String,
 }
 
-pub async fn fetch_schema(url: String, token: Token) -> Schema {
+pub async fn fetch_schema(url: &'static str, token: Token) -> Schema {
   let token = {
     let token = format!("{}:{}", token.id, token.secret);
     base64::encode(&token)
