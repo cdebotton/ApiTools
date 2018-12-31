@@ -9,13 +9,16 @@ pub enum MethodType {
 }
 
 #[derive(Debug)]
-pub struct Method {
+pub(in crate::endpoint) struct Method {
   params: Params,
   responses: (),
 }
 
 impl Method {
-  pub fn from_endpoint(value: &serde_json::Value, method_type: MethodType) -> Option<Method> {
+  pub(in crate::endpoint) fn from_endpoint(
+    value: &serde_json::Value,
+    method_type: MethodType,
+  ) -> Option<Method> {
     let method_type = match method_type {
       MethodType::Get => "get",
       MethodType::Put => "put",

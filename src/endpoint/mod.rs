@@ -1,4 +1,4 @@
-mod method;
+pub mod method;
 
 use self::method::{Method, MethodType::*};
 
