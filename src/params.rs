@@ -1,4 +1,3 @@
-use crate::dialect::typescript::Typescript;
 use crate::types::Types;
 use serde_json::Value;
 
@@ -17,26 +16,10 @@ pub struct Param {
   pub type_value: Types,
 }
 
-impl Typescript for Param {
-  fn to_typescript(&self) -> String {
-    let nullable = if self.nullable { "?" } else { "" };
-    format!("{}: {}{};", self.name, nullable, "type")
-  }
-}
-
 #[derive(Debug)]
 pub enum Params {
   Contents(Vec<Param>),
   Empty,
-}
-
-impl Typescript for Params {
-  fn to_typescript(&self) -> String {
-    match self {
-      Params::Contents(contents) => contents.iter().map(|param| param.to_typescript()).collect(),
-      Params::Empty => "".to_string(),
-    }
-  }
 }
 
 type JsonMap = serde_json::Map<String, Value>;

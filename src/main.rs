@@ -15,6 +15,7 @@ mod schema;
 mod params;
 mod dialect;
 mod types;
+mod response;
 
 pub fn main() {
     tokio::run_async(async move {
